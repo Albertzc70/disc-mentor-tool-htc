@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISC师带徒助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #F2F3F5;
+            min-height: 100vh;
+            color: #4E5969;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            min-height: calc(100vh - 60px);
+            box-shadow: 0 4px 20px rgba(29, 33, 41, 0.08);
+        }
+
+        /* 顶部标题栏 - 主品牌蓝 #165DFF */
+        .header {
+            background: #165DFF;
+            color: #FFFFFF;
+            padding: 32px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .header .subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 400;
+        }
+
+        /* 标签栏 */
+        .nav {
+            display: flex;
+            background: #FFFFFF;
+            border-bottom: 1px solid #C9CDD4;
+            padding: 0 40px;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 20px 0;
+            text-align: center;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #4E5969;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: #4080FF;
+        }
+
+        .nav-item.active {
+            color: #4080FF;
+            font-weight: 600;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #4080FF;
+        }
+
+        /* 内容区域 */
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 标题样式 */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 24px;
+            padding-left: 12px;
+            border-left: 3px solid #165DFF;
+        }
+
+        /* 练习卡片 - 白色背景，#C9CDD4边框 */
+        .exercise-card {
+            background: #FFFFFF;
+            border: 1px solid #C9CDD4;
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+
+        .exercise-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 16px;
+        }
+
+        .exercise-card p {
+            color: #4E5969;
+            margin-bottom: 12px;
+        }
+
+        /* DISC类型选择器 */
+        .disc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .disc-option {
+            background: #FFFFFF;
+            border: 2px solid #C9CDD4;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .disc-option:hover {
+            border-color: #4080FF;
+            background: #F7F9FF;
+        }
+
+        .disc-option.selected {
+            border-color: #165DFF;
+            background: #165DFF;
+            color: #FFFFFF;
+        }
+
+        .disc-option.selected * {
+            color: #FFFFFF !important;
+        }
+
+        .disc-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .disc-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #1D2129;
+        }
+
+        .disc-desc {
+            font-size: 14px;
+            color: #86909C;
+        }
+
+        /* 特征选择器 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .feature-tag {
+            background: #FFFFFF;
+            border: 1px solid #C9CDD4;
+            border-radius: 6px;
+            padding: 14px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #4E5969;
+            text-align: center;
+        }
+
+        .feature-tag:hover {
+            border-color: #4080FF;
+            color: #165DFF;
+            background: #F7F9FF;
+        }
+
+        .feature-tag.selected {
+            border-color: #165DFF;
+            background: #165DFF;
+            color: #FFFFFF;
+        }
+
+        /* 输入框 */
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #C9CDD4;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: #1D2129;
+            resize: vertical;
+        }
+
+        .input-field::placeholder {
+            color: #86909C;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #165DFF;
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            color: #1D2129;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        /* 按钮 */
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #165DFF;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background: #4080FF;
+        }
+
+        .btn-primary:active {
+            background: #0E42D2;
+        }
+
+        .btn-success {
+            background: #00B42A;
+            color: #FFFFFF;
+        }
+
+        .btn-success:hover {
+            background: #00C932;
+        }
+
+        .btn-success:active {
+            background: #009A24;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* 结果展示 */
+        .result-card {
+            background: #FFFFFF;
+            border: 1px solid #C9CDD4;
+            border-radius: 8px;
+            padding: 28px;
+            margin-top: 24px;
+        }
+
+        .result-card.success {
+            border-left: 4px solid #00B42A;
+            background: linear-gradient(to right, #E6FFED, #FFFFFF);
+        }
+
+        .result-card.error {
+            border-left: 4px solid #F53F3F;
+            background: linear-gradient(to right, #FFECE8, #FFFFFF);
+        }
+
+        .result-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 16px;
+        }
+
+        .result-card ul {
+            list-style: none;
+            margin-top: 16px;
+        }
+
+        .result-card li {
+            padding: 10px 0;
+            color: #4E5969;
+            border-bottom: 1px solid #F2F3F5;
+        }
+
+        .result-card li::before {
+            content: '✓ ';
+            color: #00B42A;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        /* 对比表格 */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #C9CDD4;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: #165DFF;
+            color: #FFFFFF;
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .comparison-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #F2F3F5;
+            color: #4E5969;
+            font-size: 14px;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #F7F8FA;
+        }
+
+        /* 分享按钮 */
+        .share-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #165DFF;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(22, 93, 255, 0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-btn:hover {
+            background: #4080FF;
+            box-shadow: 0 6px 20px rgba(22, 93, 255, 0.4);
+        }
+
+        .share-btn:active {
+            background: #0E42D2;
+        }
+
+        /* 分享模态框 */
+        .share-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(29, 33, 41, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .share-content {
+            background: #FFFFFF;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(29, 33, 41, 0.15);
+        }
+
+        .share-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1D2129;
+            margin-bottom: 8px;
+        }
+
+        .share-content p {
+            color: #86909C;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .qr-box {
+            background: #F7F8FA;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .qr-box img {
+            border-radius: 6px;
+            border: 1px solid #C9CDD4;
+        }
+
+        .share-tips {
+            text-align: left;
+            background: #F7F8FA;
+            padding: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #4E5969;
+            line-height: 1.8;
+        }
+
+        .share-tips p {
+            margin: 6px 0;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .disc-grid,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 24px 20px;
+            }
+
+            .nav {
+                padding: 0 20px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .share-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DISC师带徒助手</h1>
+            <div class="subtitle">中广核工程培训中心 HTC</div>
+        </div>
+
+        <div class="nav">
+            <div class="nav-item active" onclick="switchTab('practice')">类型识别</div>
+            <div class="nav-item" onclick="switchTab('diagnosis')">误区诊断</div>
+            <div class="nav-item" onclick="switchTab('action')">行动计划</div>
+        </div>
+
+        <div class="content">
+            <!-- 类型识别模块 -->
+            <div id="practice" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h2 class="section-title" style="margin-bottom: 0;">第一步：识别徒弟类型</h2>
+                    <div style="font-size: 14px; color: #86909C;">
+                        已练习 <span id="practiceCount">0</span> 次，正确率 <span id="accuracyRate">0%</span>
+                    </div>
+                </div>
+
+                <div class="exercise-card">
+                    <h3>📋 练习情景 <span id="scenarioCounter" style="color: #86909C; font-weight: 400; font-size: 14px;">(1/50)</span></h3>
+                    <p>根据以下描述，判断徒弟属于哪种DISC类型：</p>
+
+                    <div style="margin-top: 16px; padding: 16px; background: #F7F8FA; border-radius: 6px;">
+                        <p id="practiceScenario" style="color: #1D2129; font-weight: 500;"></p>
+                    </div>
+
+                    <div class="disc-grid" style="margin-top: 24px;">
+                        <div class="disc-option" data-type="D" onclick="selectPracticeAnswer(this)">
+                            <span class="disc-icon">🐯</span>
+                            <div class="disc-name">D型 - 老虎</div>
+                            <div class="disc-desc">支配型</div>
+                        </div>
+                        <div class="disc-option" data-type="I" onclick="selectPracticeAnswer(this)">
+                            <span class="disc-icon">🦚</span>
+                            <div class="disc-name">I型 - 孔雀</div>
+                            <div class="disc-desc">表达型</div>
+                        </div>
+                        <div class="disc-option" data-type="C" onclick="selectPracticeAnswer(this)">
+                            <span class="disc-icon">🦉</span>
+                            <div class="disc-name">C型 - 猫头鹰</div>
+                            <div class="disc-desc">精准型</div>
+                        </div>
+                        <div class="disc-option" data-type="S" onclick="selectPracticeAnswer(this)">
+                            <span class="disc-icon">🐨</span>
+                            <div class="disc-name">S型 - 考拉</div>
+                            <div class="disc-desc">耐心型</div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="submitPractice()">✅ 提交判断</button>
+                        <button class="btn btn-success" onclick="showAnswer()">💡 查看答案</button>
+                        <button class="btn btn-primary" onclick="nextScenario()" style="background: #86909C;">➡️ 下一题</button>
+                    </div>
+                </div>
+
+                <div id="analysisStep" style="display: none;">
+                    <h2 class="section-title">第二步：分析判断依据</h2>
+                    
+                    <div class="exercise-card">
+                        <h3>📊 选择判断依据（可多选）</h3>
+                        <p>刚才做判断时，你是基于徒弟的哪些行为特征：</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-tag" data-type="D" onclick="toggleAnalysisFeature(this)">目标导向，追求结果</div>
+                            <div class="feature-tag" data-type="D" onclick="toggleAnalysisFeature(this)">行动迅速，喜欢挑战</div>
+                            <div class="feature-tag" data-type="D" onclick="toggleAnalysisFeature(this)">讨厌细节，想掌控局面</div>
+                            <div class="feature-tag" data-type="I" onclick="toggleAnalysisFeature(this)">爱表达，喜欢被关注</div>
+                            <div class="feature-tag" data-type="I" onclick="toggleAnalysisFeature(this)">乐观活跃，有感染力</div>
+                            <div class="feature-tag" data-type="I" onclick="toggleAnalysisFeature(this)">追求认可，喜欢舞台</div>
+                            <div class="feature-tag" data-type="C" onclick="toggleAnalysisFeature(this)">要数据，注重标准</div>
+                            <div class="feature-tag" data-type="C" onclick="toggleAnalysisFeature(this)">逻辑严谨，决策慎重</div>
+                            <div class="feature-tag" data-type="C" onclick="toggleAnalysisFeature(this)">容错率低，追求完美</div>
+                            <div class="feature-tag" data-type="S" onclick="toggleAnalysisFeature(this)">重关系，求稳定</div>
+                            <div class="feature-tag" data-type="S" onclick="toggleAnalysisFeature(this)">配合度高，有耐心</div>
+                            <div class="feature-tag" data-type="S" onclick="toggleAnalysisFeature(this)">需要清晰步骤与支持</div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="completeAnalysis()">📈 完成分析</button>
+                    </div>
+                </div>
+
+                <div id="resultStep" style="display: none;">
+                    <h2 class="section-title">第三步：查看结果与建议</h2>
+                    <div id="practiceResult"></div>
+                </div>
+            </div>
+
+            <!-- 误区诊断模块 -->
+            <div id="diagnosis" class="tab-content">
+                <h2 class="section-title">带教误区诊断</h2>
+                
+                <div class="exercise-card">
+                    <h3>🔬 情景诊断</h3>
+                    
+                    <p><strong>情景：</strong>D型（老虎）徒弟急于求成，忽略安全规范。你应该如何处理？</p>
+                    
+                    <div style="margin-top: 16px; padding: 16px; background: #F7F8FA; border-radius: 6px;">
+                        <p style="color: #1D2129; font-weight: 500; margin-bottom: 12px;">选择最佳处理方法：</p>
+                        <div style="display: grid; gap: 10px;">
+                            <div class="feature-tag" style="text-align: left;" onclick="selectDiagnosisOption('A', this)">
+                                A. 直接批评他，强调安全问题的重要性
+                            </div>
+                            <div class="feature-tag" style="text-align: left;" onclick="selectDiagnosisOption('B', this)">
+                                B. 给他看事故案例，让他自己反思
+                            </div>
+                            <div class="feature-tag" style="text-align: left;" onclick="selectDiagnosisOption('C', this)">
+                                C. 跟他一起制定详细的检查清单
+                            </div>
+                            <div class="feature-tag" style="text-align: left;" onclick="selectDiagnosisOption('D', this)">
+                                D. 跟他说"慢慢来，安全第一"，让他自己调整
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-top: 24px;" onclick="submitDiagnosis()">✅ 提交诊断</button>
+                </div>
+
+                <div id="diagnosisResult"></div>
+            </div>
+
+            <!-- 行动计划模块 -->
+            <div id="action" class="tab-content">
+                <h2 class="section-title">一周行动计划制定</h2>
+                
+                <div class="exercise-card">
+                    <div class="input-group" style="margin-bottom: 24px;">
+                        <label>徒弟类型</label>
+                        <div class="disc-grid">
+                            <div class="disc-option" data-type="D" onclick="selectActionType(this)">
+                                <span class="disc-icon">🐯</span>
+                                <div class="disc-name">D型 - 老虎</div>
+                                <div class="disc-desc">支配型</div>
+                            </div>
+                            <div class="disc-option" data-type="I" onclick="selectActionType(this)">
+                                <span class="disc-icon">🦚</span>
+                                <div class="disc-name">I型 - 孔雀</div>
+                                <div class="disc-desc">表达型</div>
+                            </div>
+                            <div class="disc-option" data-type="C" onclick="selectActionType(this)">
+                                <span class="disc-icon">🦉</span>
+                                <div class="disc-name">C型 - 猫头鹰</div>
+                                <div class="disc-desc">精准型</div>
+                            </div>
+                            <div class="disc-option" data-type="S" onclick="selectActionType(this)">
+                                <span class="disc-icon">🐨</span>
+                                <div class="disc-name">S型 - 考拉</div>
+                                <div class="disc-desc">耐心型</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>下周核心任务</label>
+                        <textarea class="input-field" id="weeklyTask" rows="3" placeholder="例如：独立完成XX系统的例行检查..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label>你的带教思路</label>
+                        <textarea class="input-field" id="actionPlan" rows="4" placeholder="描述你的带教方法和策略..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateActionPlan()">📋 生成优化建议</button>
+                </div>
+
+                <div id="actionResult"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="share-btn" onclick="showShareModal()" title="分享工具">📤</button>
+
+    <script>
+        // DISC数据
+        const discData = {
+            D: { name: '老虎型（支配型）', icon: '🐯', color: '#165DFF', features: ['结果导向', '行动迅速', '喜欢挑战', '讨厌细节', '追求掌控'], strategies: ['明确目标，少讲细节', '给予挑战性任务，授权让他做主', '设定赛点和验收标准，定期复盘', '直接沟通，少用温和语气', '用结果说话，认可他的成就'], weeklyAction: '安排一个独立负责的小项目，设定明确的里程碑，定期检查进度但不干涉过程' },
+            I: { name: '孔雀型（表达型）', icon: '🦚', color: '#4080FF', features: ['爱表达', '喜欢被关注', '乐观活跃', '有感染力', '追求认可'], strategies: ['给舞台，多展示机会', '频繁表扬，用积极语言', '设定展示位和里程碑，让大家看到', '鼓励创新，允许试错', '用故事和案例来沟通'], weeklyAction: '安排一次团队分享或技术汇报，让他展示学习成果，并给予公开表扬' },
+            C: { name: '猫头鹰型（精准型）', icon: '🦉', color: '#165DFF', features: ['要数据', '注重标准', '逻辑严谨', '决策慎重', '容错率低'], strategies: ['提供数据和标准模板', '用检查清单定义完成度', '严谨复盘，指出要点', '给他足够的思考时间', '避免催促，按他的节奏来'], weeklyAction: '提供详细的操作手册和检查清单，让他按照标准流程执行，并允许充分准备' },
+            S: { name: '考拉型（耐心型）', icon: '🐨', color: '#165DFF', features: ['重关系', '求稳定', '配合度高', '有耐心', '需要清晰步骤'], strategies: ['先给安全感，建立信任', '提供清晰的步骤和指导', '小步快跑，节奏可控', '手把手支持，直到他能独立', '温和鼓励，避免压力'], weeklyAction: '将大任务拆解成小步骤，逐个指导完成，每完成一步给予鼓励' }
+        };
+
+        const practiceScenarios = [
+            // ========== C型（精准型）- 12个场景：设计、调试、技术岗位徒弟 ==========
+            { text: "这个徒弟在审核设计方案时，会反复核对每一个技术参数是否符合华龙一号标准。他说'宁可多花时间，也不能有技术纰漏'，即使是小细节也会严格把关。", correctAnswer: "C", hint: "注重标准、数据驱动、严谨审慎" },
+            { text: "在技术评审会上，这个徒弟会提出'这个方案的安全系数计算是否准确'，并要求拿出详细的仿真验证报告。他不会接受'大概没问题'这样的回答。", correctAnswer: "C", hint: "要求数据、质疑模糊、相信技术证据" },
+            { text: "这个徒弟在编写技术文件时，格式要求必须完全符合文档规范，用词不能有任何歧义。他说'技术文件不能有模糊表述，必须严谨'。", correctAnswer: "C", hint: "追求规范、容错率低、逻辑严谨" },
+            { text: "处理技术问题时，这个徒弟不会立即下结论，而是说'我需要查一下历史数据和技术标准'。他更相信系统和流程，而不是经验或直觉。", correctAnswer: "C", hint: "依赖标准和数据、审慎决策、不依赖经验" },
+            { text: "这个徒弟在项目启动会上，会问'项目的技术标准和验收标准是什么'，如果没有明确的规范文档，他会感到不安，不知如何推进。", correctAnswer: "C", hint: "需要明确标准、重视文档、依赖指引" },
+            { text: "发现技术规程有表述不清的地方，即使不影响当前工作，这个徒弟也会坚持要求修改完善。他认为'既然有标准就必须严格执行'。", correctAnswer: "C", hint: "死板执行标准、追求规范、不容忍瑕疵" },
+            { text: "在做数据分析报告时，这个徒弟会检查每一个公式的准确性，甚至会重新计算一遍确认无误才敢提交。他对技术错误的容忍度很低。", correctAnswer: "C", hint: "零容忍错误、反复验证、审慎" },
+            { text: "这个徒弟不擅长在公开场合即兴发言，但如果被问到技术细节，他能给出非常准确的数据支撑。他更擅长独立研究和书面技术工作。", correctAnswer: "C", hint: "不善社交但专业、擅长书面技术报告、重视数据" },
+            { text: "当设计方案提出'优化20%'的说法时，这个徒弟会质疑'具体是什么指标？怎么计算出来的？'他需要精确的量化数据，不能接受模糊概念。", correctAnswer: "C", hint: "追求精确、质疑模糊、需要量化" },
+            { text: "完成一个技术方案后，这个徒弟会花大量时间复查，即使已经验证过多次，他还是会觉得'可能还有问题'。这种过度谨慎有时会延误交付。", correctAnswer: "C", hint: "过度谨慎、反复验证、担心技术失误" },
+            { text: "面对新的技术应用，这个徒弟不会轻易接受，而是会问'有成功案例吗''做过风险评估吗''符合国家核电标准吗'。他需要充分的证据支持。", correctAnswer: "C", hint: "质疑精神、需要案例证据、相信验证" },
+            { text: "这个徒弟在汇报技术工作时，会准备详尽的数据表格和对比分析，甚至列出所有的参考文献。他认为没有数据支撑的技术结论都是不可靠的。", correctAnswer: "C", hint: "数据驱动、详尽准备、不相信空口说" },
+
+            // ========== D型（支配型）- 12个场景：项目管理、施工管理岗位徒弟 ==========
+            { text: "这个徒弟在项目推进会上说'这个月必须完成XX节点，没有商量余地'，然后直接分配任务，不会纠结细节。他更在乎按期交付。", correctAnswer: "D", hint: "结果导向、严格节点、不纠结细节" },
+            { text: "接到紧急项目任务时，这个徒弟会说'交给我吧'，然后立即召开协调会布置工作。他不会花时间讨论各种可能性，直接进入执行阶段。", correctAnswer: "D", hint: "行动迅速、快速决策、不犹豫" },
+            { text: "在讨论项目管理问题时，这个徒弟习惯直接说'我觉得应该这样做'，而不是'大家怎么看'。他喜欢主导项目方向，不喜欢被动等待。", correctAnswer: "D", hint: "主导意识、喜欢掌控、主动出击" },
+            { text: "当项目进度滞后时，这个徒弟会显得不耐烦，甚至会催促团队'别浪费时间讨论了，赶紧执行'。他讨厌低效率的会议和决策。", correctAnswer: "D", hint: "追求效率、讨厌拖沓、果断执行" },
+            { text: "面对项目风险，这个徒弟的第一反应是'我该怎么控制风险并继续推进'，而不是'能不能暂停项目'。他更相信自己能解决问题。", correctAnswer: "D", hint: "独立自信、相信能力、主动应对" },
+            { text: "在项目汇报会上，这个徒弟经常打断别人说'直接说重点和行动计划'。他认为长篇大论是在浪费时间，更关心解决方案和交付日期。", correctAnswer: "D", hint: "直接高效、不耐烦冗长、关注行动" },
+            { text: "给这个徒弟一个有挑战性的项目目标，他会很兴奋；但如果让他做常规的项目监控工作，他会很快失去兴趣和动力。", correctAnswer: "D", hint: "喜欢挑战、讨厌重复、需要目标感" },
+            { text: "当项目方案被质疑时，这个徒弟会据理力争，甚至会说'我的方案是基于实际经验的'。他不容易被理论说服，更倾向于坚持自己的判断。", correctAnswer: "D", hint: "固执己见、相信经验、不容易妥协" },
+            { text: "这个徒弟看到项目管理流程繁琐时，会说'没必要这么复杂吧，按节点推进就行'。他倾向于简化流程，认为规则是可以灵活变通的。", correctAnswer: "D", hint: "讨厌繁琐、灵活变通、简化倾向" },
+            { text: "在项目关键时刻，这个徒弟会主动承担最难协调的工作，他说'总得有人冲在前面'。他不怕承担责任，但不喜欢被过多干涉。", correctAnswer: "D", hint: "勇于担当、冲在前面、需要自主权" },
+            { text: "这个徒弟在供应商谈判中非常强势，会直接说'这是我们的要求，如果不能达到就换供应商'。他更关注结果和底线。", correctAnswer: "D", hint: "谈判强势、结果优先、不妥协" },
+            { text: "当出现技术争议时，这个徒弟会说'先按我的方案执行，有问题我再负责'。他更强调执行和推进，而不是反复论证。", correctAnswer: "D", hint: "先执行后修正、强调推进、不反复论证" },
+
+            // ========== I型（表达型）- 13个场景：人力资源、培训、沟通协调岗位徒弟 ==========
+            { text: "这个徒弟在团队协作会议上总是第一个发言，说得最多。他喜欢分享自己的想法，即使有时候跑题了也会继续说下去。", correctAnswer: "I", hint: "表达欲强、喜欢分享、容易跑题" },
+            { text: "完成一个培训项目后，这个徒弟很想展示给所有人看，希望得到表扬。如果领导认可他，他会更有动力；如果忽视他的成果，他会失落。", correctAnswer: "I", hint: "渴望认可、需要表扬、展示欲" },
+            { text: "遇到跨部门协调问题时，这个徒弟不会闷头研究方案，而是会主动找各部门沟通讨论。他说'人多力量大，多听听大家的想法'。", correctAnswer: "I", hint: "喜欢社交、主动沟通、信任团队" },
+            { text: "让这个徒弟写枯燥的技术文档，他会很难坚持；但如果让他去汇报、演讲、培训，他会做得非常出色，而且很有成就感。", correctAnswer: "I", hint: "讨厌枯燥、喜欢展示、擅长沟通" },
+            { text: "这个徒弟总是有很多管理创新点子，虽然有些不成熟，但他敢于提出。他说'试试看嘛，说不定能提升效率'。", correctAnswer: "I", hint: "创新思维、敢于尝试、乐观" },
+            { text: "在团队里，这个徒弟像润滑剂，能活跃气氛。他喜欢开玩笑，即使在项目压力大的时候，也能让气氛轻松下来。", correctAnswer: "I", hint: "活跃气氛、幽默感、情绪感染" },
+            { text: "这个徒弟在汇报工作时，喜欢用生动的案例和故事，而不是枯燥的数据。他认为'这样大家更容易记住和接受'。", correctAnswer: "I", hint: "讲故事、生动表达、避免枯燥" },
+            { text: "当项目取得成绩时，这个徒弟会第一时间告诉所有人，甚至发朋友圈庆祝。他很享受被关注和被认可的感觉。", correctAnswer: "I", hint: "喜欢分享成绩、需要关注、外向" },
+            { text: "这个徒弟很容易受到表扬的激励，一句'你做得很好'能让他干劲十足；但如果长期得不到认可，他会失去热情。", correctAnswer: "I", hint: "需要激励、敏感于认可、情绪驱动" },
+            { text: "在大型项目会议上，这个徒弟能快速融入，和任何人都能聊得来。他不怯场，反而很享受在众人面前的表现机会。", correctAnswer: "I", hint: "社交能力、不怯场、享受舞台" },
+            { text: "当项目遇到困难时，这个徒弟会主动说'别灰心，我们一定能解决'。他的乐观情绪能感染周围的人，给大家带来正能量。", correctAnswer: "I", hint: "乐观积极、感染力、正能量" },
+            { text: "这个徒弟喜欢学习新管理方法，但不是深钻，而是泛泛了解。他说'了解个大概就行，需要的时候再学'。他更感兴趣的是广度。", correctAnswer: "I", hint: "广度学习、不求深钻、好奇" },
+            { text: "在对外交流中，这个徒弟很擅长和中广核各业务部门、外部合作伙伴建立良好关系。他说'关系好了，事情就好办了'。", correctAnswer: "I", hint: "擅长关系建立、重视人脉、善于外交" },
+
+            // ========== S型（耐心型）- 13个场景：技术、基层管理、HR、采购岗位徒弟 ==========
+            { text: "这个徒弟做事认真踏实，执行力强，能很好地配合团队工作，但不太愿意主动表达不同意见，需要领导给予明确的指示。", correctAnswer: "S", hint: "重关系、求稳定、配合度高" },
+            { text: "当公司进行组织调整或管理方式变化时，这个徒弟会适应得很慢。他说'原来的方式挺好的，为什么要改'。", correctAnswer: "S", hint: "抗拒变化、喜欢稳定、适应慢" },
+            { text: "在技术研讨会上，这个徒弟很少主动发言，更倾向于倾听和记录。领导说什么他就做什么，不会有太多异议，即使内心有想法。", correctAnswer: "S", hint: "被动接受、不愿表达、倾听者" },
+            { text: "给这个徒弟一个新项目，他会问'能不能先看看以前的项目是怎么做的'。他需要参考和指导，不太敢直接尝试新方法。", correctAnswer: "S", hint: "需要参考、怕做错、谨慎" },
+            { text: "这个徒弟很有耐心，即使是长期的技术跟踪工作，他也能坚持。他不会因为进度慢而抱怨，反而会默默把事情做好。", correctAnswer: "S", hint: "有耐心、能坚持、不抱怨" },
+            { text: "当团队内部出现矛盾或利益冲突时，这个徒弟会站在中立或者弱势的一方，不太会站出来主持公道。他更希望大家和睦相处。", correctAnswer: "S", hint: "回避冲突、维护和谐、中立" },
+            { text: "这个徒弟完成工作后，不会急着炫耀，而是默默等待你的检查。如果你说'做得很好'，他会很谦虚地笑笑说'都是应该做的'。", correctAnswer: "S", hint: "谦虚内敛、不张扬、低调" },
+            { text: "这个徒弟很在意领导的看法和评价。如果你态度不好，他会很敏感。他需要安全感和信任，关系好他才敢大胆去做事。", correctAnswer: "S", hint: "需要安全感、敏感于关系、信任依赖" },
+            { text: "在项目压力很大时，这个徒弟可能会不知所措，需要你明确告诉他第一步做什么、第二步做什么。他需要详细的指引才能冷静。", correctAnswer: "S", hint: "需要指引、压力大时迷茫、依赖步骤" },
+            { text: "这个徒弟不会主动争取项目管理机会，但如果你给他一个项目，他会认真完成。他说'领导安排什么我就做什么'，缺乏主动性。", correctAnswer: "S", hint: "被动执行、缺乏主动性、听安排" },
+            { text: "这个徒弟对中广核有很高的忠诚度，即使外部有更好的机会，他也不会轻易离职。他说'这里的人对我很好，我不舍得走'。", correctAnswer: "S", hint: "忠诚度高、重感情、不易离职" },
+            { text: "当遇到技术或管理问题时，这个徒弟不会立刻提出激进方案，而是会先观察和等待。他更喜欢稳妥的方式，不冒险尝试。", correctAnswer: "S", hint: "先观察后行动、不冒险、稳妥" },
+            { text: "这个徒弟的工作节奏偏稳，不是因为他不努力，而是因为他希望把事情做扎实。他说'项目管理要稳扎稳打'，宁可进度慢一点也要保证质量。", correctAnswer: "S", hint: "节奏稳健、稳扎稳打、重视质量" }
+        ];
+
+        let selectedPracticeAnswer = null;
+        let selectedFeatures = [];
+        let selectedActionType = null;
+        let selectedDiagnosisOption = null;
+        let currentScenarioIndex = 0;
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRandomScenario();
+            updatePracticeStats();
+        });
+
+        // 更新练习统计
+        function updatePracticeStats() {
+            let practiceData = JSON.parse(localStorage.getItem('discPracticeData') || '[]');
+            const identifyData = practiceData.filter(d => d.type === 'identify');
+            const correctCount = identifyData.filter(d => d.isCorrect).length;
+
+            document.getElementById('practiceCount').textContent = identifyData.length;
+            const accuracy = identifyData.length > 0 ? Math.round((correctCount / identifyData.length) * 100) : 0;
+            document.getElementById('accuracyRate').textContent = accuracy + '%';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.nav-item').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // 加载随机题目
+        function loadRandomScenario() {
+            currentScenarioIndex = Math.floor(Math.random() * practiceScenarios.length);
+            const scenario = practiceScenarios[currentScenarioIndex];
+            document.getElementById('practiceScenario').textContent = scenario.text;
+            document.getElementById('scenarioCounter').textContent = `(${currentScenarioIndex + 1}/${practiceScenarios.length})`;
+
+            // 重置选择
+            selectedPracticeAnswer = null;
+            document.querySelectorAll('#practice .disc-option').forEach(opt => opt.classList.remove('selected'));
+
+            // 隐藏分析步骤和结果
+            document.getElementById('analysisStep').style.display = 'none';
+            document.getElementById('resultStep').style.display = 'none';
+            document.getElementById('practiceResult').innerHTML = '';
+        }
+
+        // 下一题
+        function nextScenario() {
+            loadRandomScenario();
+            document.getElementById('practice').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectPracticeAnswer(element) {
+            document.querySelectorAll('#practice .disc-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedPracticeAnswer = element.dataset.type;
+        }
+
+        function submitPractice() {
+            if (!selectedPracticeAnswer) {
+                alert('请先选择一种类型');
+                return;
+            }
+            document.getElementById('analysisStep').style.display = 'block';
+            document.getElementById('analysisStep').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showAnswer() {
+            const scenario = practiceScenarios[currentScenarioIndex];
+            const resultDiv = document.getElementById('practiceResult');
+            resultDiv.innerHTML = `
+                <div class="result-card">
+                    <h4>💡 参考答案</h4>
+                    <p><strong>正确答案：</strong>${discData[scenario.correctAnswer].icon} ${discData[scenario.correctAnswer].name}</p>
+                    <p><strong>判断依据：</strong>${scenario.hint}</p>
+                    <p><strong>带教建议：</strong></p>
+                    <ul>${discData[scenario.correctAnswer].strategies.slice(0, 3).map(s => `<li>${s}</li>`).join('')}</ul>
+                </div>
+            `;
+            document.getElementById('resultStep').style.display = 'block';
+            document.getElementById('resultStep').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleAnalysisFeature(element) {
+            element.classList.toggle('selected');
+        }
+
+        function completeAnalysis() {
+            const scenario = practiceScenarios[currentScenarioIndex];
+            const userCorrect = selectedPracticeAnswer === scenario.correctAnswer;
+            
+            let feedbackHTML = '';
+            if (userCorrect) {
+                feedbackHTML = `
+                    <div class="result-card success">
+                        <h4>✅ 判断正确！</h4>
+                        <p>你正确识别了徒弟的DISC类型：${discData[scenario.correctAnswer].icon} ${discData[scenario.correctAnswer].name}</p>
+                    </div>
+                `;
+            } else {
+                feedbackHTML = `
+                    <div class="result-card error">
+                        <h4>❌ 判断有待改进</h4>
+                        <p>你的判断：${discData[selectedPracticeAnswer].icon} ${discData[selectedPracticeAnswer].name}</p>
+                        <p>正确答案：${discData[scenario.correctAnswer].icon} ${discData[scenario.correctAnswer].name}</p>
+                        <p><strong>改进建议：</strong>注意观察徒弟是否${scenario.hint}</p>
+                    </div>
+                `;
+            }
+
+            const comparisonHTML = `
+                <div class="result-card" style="margin-top: 20px;">
+                    <h4>📊 类型对比分析</h4>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>维度</th>
+                                <th>${discData[selectedPracticeAnswer] ? discData[selectedPracticeAnswer].name : '无'}</th>
+                                <th>${discData[scenario.correctAnswer].name}（正确）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>决策风格</td>
+                                <td>${getDecisionStyle(selectedPracticeAnswer)}</td>
+                                <td>${getDecisionStyle(scenario.correctAnswer)}</td>
+                            </tr>
+                            <tr>
+                                <td>沟通偏好</td>
+                                <td>${getCommunicationStyle(selectedPracticeAnswer)}</td>
+                                <td>${getCommunicationStyle(scenario.correctAnswer)}</td>
+                            </tr>
+                            <tr>
+                                <td>带教重点</td>
+                                <td>${getTeachingFocus(selectedPracticeAnswer)}</td>
+                                <td>${getTeachingFocus(scenario.correctAnswer)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            const resultDiv = document.getElementById('practiceResult');
+            resultDiv.innerHTML = feedbackHTML + comparisonHTML;
+            document.getElementById('resultStep').style.display = 'block';
+            document.getElementById('resultStep').scrollIntoView({ behavior: 'smooth' });
+
+            savePracticeData({ type: 'identify', userAnswer: selectedPracticeAnswer, correctAnswer: scenario.correctAnswer, isCorrect: userCorrect, timestamp: new Date().toISOString() });
+            updatePracticeStats();
+        }
+
+        function selectDiagnosisOption(option, element) {
+            document.querySelectorAll('#diagnosis .feature-tag').forEach(tag => tag.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedDiagnosisOption = option;
+        }
+
+        function submitDiagnosis() {
+            if (!selectedDiagnosisOption) {
+                alert('请先选择一个处理方法');
+                return;
+            }
+
+            const correctAnswer = 'B';
+            const resultDiv = document.getElementById('diagnosisResult');
+            resultDiv.innerHTML = `
+                <div class="result-card ${selectedDiagnosisOption === correctAnswer ? 'success' : 'error'}" style="margin-top: 24px;">
+                    <h4>${selectedDiagnosisOption === correctAnswer ? '✅ 优秀！' : '💡 改进建议'}</h4>
+                    <p>你的选择：${selectedDiagnosisOption}</p>
+                    <p style="margin-top: 12px;"><strong>更优方案：B. 给他看事故案例，让他自己反思</strong></p>
+                    <p style="margin-top: 8px; color: #86909C;">D型徒弟自主性强，不喜欢被说教。用真实案例让他自己得出结论，效果更好。</p>
+                </div>
+            `;
+        }
+
+        function selectActionType(element) {
+            document.querySelectorAll('#action .disc-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedActionType = element.dataset.type;
+        }
+
+        function generateActionPlan() {
+            if (!selectedActionType) {
+                alert('请先选择徒弟类型');
+                return;
+            }
+
+            const weeklyTask = document.getElementById('weeklyTask').value;
+            const actionPlan = document.getElementById('actionPlan').value;
+            const data = discData[selectedActionType];
+
+            const resultDiv = document.getElementById('actionResult');
+            resultDiv.innerHTML = `
+                <div class="result-card">
+                    <h4>${data.icon} ${data.name} 徒弟行动建议</h4>
+                    <div style="margin-top: 16px;">
+                        <p><strong>核心任务：</strong>${weeklyTask || '未指定'}</p>
+                        <p><strong>你的思路：</strong>${actionPlan || '未填写'}</p>
+                        <div style="margin-top: 16px; padding: 16px; background: #F7F8FA; border-radius: 6px;">
+                            <p><strong>🎯 本周行动建议：</strong></p>
+                            <p style="margin-top: 8px;">${data.weeklyAction}</p>
+                        </div>
+                        <div style="margin-top: 16px;">
+                            <p><strong>💡 策略要点：</strong></p>
+                            <ul>${data.strategies.slice(0, 3).map(s => `<li>${s}</li>`).join('')}</ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            savePracticeData({ type: 'action', discType: selectedActionType, weeklyTask, userPlan: actionPlan, timestamp: new Date().toISOString() });
+        }
+
+        function getDecisionStyle(type) {
+            const styles = { D: '快速决策，敢于冒险', I: '感性决策，注重感受', C: '审慎决策，注重数据', S: '谨慎决策，注重稳定' };
+            return styles[type] || '';
+        }
+
+        function getCommunicationStyle(type) {
+            const styles = { D: '直接高效，少废话', I: '热情生动，讲故事', C: '严谨细致，讲数据', S: '温和耐心，讲步骤' };
+            return styles[type] || '';
+        }
+
+        function getTeachingFocus(type) {
+            const focuses = { D: '目标设定与授权', I: '展示机会与认可', C: '标准流程与数据', S: '安全感与步骤指导' };
+            return focuses[type] || '';
+        }
+
+        function savePracticeData(data) {
+            let practiceData = JSON.parse(localStorage.getItem('discPracticeData') || '[]');
+            practiceData.push(data);
+            localStorage.setItem('discPracticeData', JSON.stringify(practiceData));
+        }
+
+        function showShareModal() {
+            const modal = document.createElement('div');
+            modal.className = 'share-modal';
+            modal.innerHTML = `
+                <div class="share-content">
+                    <h3>📤 分享工具</h3>
+                    <p>让更多人练习师带徒能力</p>
+                    <div class="qr-box" id="qrCodeContainer">
+                        <div style="color: #165DFF; padding: 40px;">🔗 正在生成二维码...</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="closeShareModal()" style="margin-top: 16px;">关闭</button>
+                    <div class="share-tips">
+                        <p><strong>💡 使用提示：</strong></p>
+                        <p>• 截图分享到钉钉群/微信群</p>
+                        <p>• 打印张贴在培训教室</p>
+                        <p>• 附在公众号文章末尾</p>
+                        <p>• 扫码即可在手机上使用</p>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const qrUrl = window.location.href;
+            const qrApi = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`;
+            setTimeout(() => {
+                document.getElementById('qrCodeContainer').innerHTML = `
+                    <img src="${qrApi}" alt="工具二维码" style="width: 200px; height: 200px;">
+                `;
+            }, 300);
+
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            };
+        }
+
+        function closeShareModal() {
+            const modal = document.querySelector('.share-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>程序解码五要素 | 中广核工程培训中心</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            background: #0a0e1a;
+            min-height: 100vh;
+            color: #e0e6f0;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(0,82,180,0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(77,184,232,0.1) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 品牌栏 */
+        .brand-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            margin-bottom: 8px;
+        }
+        .brand-left { display: flex; align-items: center; gap: 10px; }
+        .brand-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #0052b4, #0096d6);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 700; color: #fff;
+        }
+        .brand-text { font-size: 14px; color: rgba(255,255,255,0.85); }
+        .beta-tag {
+            background: rgba(77,184,232,0.15);
+            color: #4db8e8;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            border: 1px solid rgba(77,184,232,0.3);
+        }
+
+        /* 主标题 */
+        .hero {
+            text-align: center;
+            padding: 32px 0 24px;
+        }
+        .hero-tag {
+            display: inline-block;
+            background: rgba(77,184,232,0.1);
+            border: 1px solid rgba(77,184,232,0.2);
+            color: #4db8e8;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .hero h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #4db8e8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .hero .subtitle {
+            font-size: 15px;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 1px;
+        }
+
+        /* 保密提示 */
+        .security-notice {
+            background: rgba(255,193,7,0.08);
+            border: 1px solid rgba(255,193,7,0.2);
+            border-radius: 10px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: #ffc107;
+            margin-bottom: 24px;
+        }
+        .security-notice .icon { font-size: 18px; flex-shrink: 0; }
+        .security-notice strong { color: #ffd54f; }
+
+        /* 五要素框架说明 */
+        .framework-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 28px 24px;
+            margin-bottom: 24px;
+        }
+        .framework-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4db8e8;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .elements-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+        .element-item {
+            text-align: center;
+            padding: 16px 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .element-item:hover {
+            background: rgba(0,82,180,0.1);
+            border-color: rgba(0,82,180,0.3);
+            transform: translateY(-2px);
+        }
+        .element-item .symbol { font-size: 28px; margin-bottom: 6px; }
+        .element-item .el-name { font-size: 14px; font-weight: 600; color: #e0e6f0; margin-bottom: 4px; }
+        .element-item .el-question { font-size: 12px; color: rgba(255,255,255,0.45); }
+        .element-item .el-focus { font-size: 11px; color: #4db8e8; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); }
+
+        /* 输入区 */
+        .input-section { margin-bottom: 24px; }
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .section-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: #e0e6f0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .char-count { font-size: 13px; color: rgba(255,255,255,0.4); }
+        .char-count.warning { color: #e74c3c; }
+
+        textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            color: #e0e6f0;
+            font-size: 16px;
+            line-height: 1.7;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #4db8e8;
+            box-shadow: 0 0 0 3px rgba(77,184,232,0.1);
+        }
+        textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+        /* 按钮 */
+        .button-section { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            padding: 14px 36px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #0052b4 0%, #0096d6 100%);
+            color: #fff;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,82,180,0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-voice {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: #fff;
+        }
+        .btn-voice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,184,148,0.4);
+        }
+        .btn-voice:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+        .btn-outline {
+            background: transparent;
+            color: #4db8e8;
+            border: 1px solid rgba(77,184,232,0.3);
+            padding: 12px 28px;
+            font-size: 14px;
+        }
+        .btn-outline:hover {
+            background: rgba(77,184,232,0.08);
+        }
+        .btn-sm {
+            padding: 10px 24px;
+            font-size: 14px;
+        }
+
+        /* 加载动画 */
+        .loading-overlay {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .loading-overlay.active { display: block; }
+        .loading-spinner {
+            width: 48px; height: 48px;
+            border: 3px solid rgba(77,184,232,0.2);
+            border-top-color: #4db8e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: rgba(255,255,255,0.6); font-size: 15px; }
+        .loading-sub { color: rgba(255,255,255,0.35); font-size: 13px; margin-top: 8px; }
+
+        /* ===== 语音对话页面 ===== */
+        .voice-page {
+            display: none;
+            height: 100vh;
+            height: 100dvh;
+            flex-direction: column;
+        }
+        .voice-page.active {
+            display: flex;
+        }
+
+        /* 顶部进度条 */
+        .voice-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+        }
+        .vp-step {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            border: 2px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+            transition: all 0.3s;
+            position: relative;
+        }
+        .vp-step.done {
+            border-color: #2ecc71;
+            color: #2ecc71;
+            background: rgba(46,204,113,0.1);
+        }
+        .vp-step.current {
+            border-color: #4db8e8;
+            color: #4db8e8;
+            background: rgba(77,184,232,0.15);
+            box-shadow: 0 0 12px rgba(77,184,232,0.3);
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 12px rgba(77,184,232,0.3); }
+            50% { box-shadow: 0 0 20px rgba(77,184,232,0.5); }
+        }
+        .vp-step.upcoming {
+            border-color: rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.15);
+        }
+        .vp-connector {
+            width: 32px; height: 2px;
+            background: rgba(255,255,255,0.1);
+            transition: background 0.3s;
+        }
+        .vp-connector.done { background: #2ecc71; }
+        .vp-step-label {
+            position: absolute;
+            top: 46px;
+            font-size: 10px;
+            white-space: nowrap;
+            color: rgba(255,255,255,0.3);
+        }
+        .vp-step.current .vp-step-label { color: #4db8e8; }
+        .vp-step.done .vp-step-label { color: rgba(46,204,113,0.7); }
+
+        /* 对话区域 */
+        .voice-chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+            margin-bottom: 12px;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .voice-chat::-webkit-scrollbar { width: 4px; }
+        .voice-chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+        .chat-msg {
+            margin-bottom: 16px;
+            animation: fadeInUp 0.4s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-msg.ai {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-avatar {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .chat-msg.ai .chat-avatar {
+            background: linear-gradient(135deg, #0052b4, #0096d6);
+        }
+        .chat-msg.student .chat-avatar {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+        }
+        .chat-msg.student {
+            display: flex;
+            gap: 10px;
+            flex-direction: row-reverse;
+        }
+        .chat-bubble {
+            max-width: 80%;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .chat-msg.ai .chat-bubble {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-top-left-radius: 4px;
+            color: rgba(255,255,255,0.85);
+        }
+        .chat-msg.student .chat-bubble {
+            background: rgba(0,184,148,0.12);
+            border: 1px solid rgba(0,184,148,0.2);
+            border-top-right-radius: 4px;
+            color: rgba(255,255,255,0.9);
+        }
+        .chat-bubble .hint-tag {
+            display: inline-block;
+            background: rgba(77,184,232,0.15);
+            color: #4db8e8;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        /* AI 打字效果 */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .typing-indicator span {
+            width: 8px; height: 8px;
+            background: rgba(77,184,232,0.5);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        /* 输入栏 */
+        .voice-input-bar {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 10px 12px;
+        }
+        .voice-input-bar textarea {
+            flex: 1;
+            min-height: 48px;
+            max-height: 120px;
+            padding: 12px 14px;
+            border: none;
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            resize: none;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .voice-input-bar textarea:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+
+        .send-btn {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #0052b4, #0096d6);
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .send-btn:hover { transform: scale(1.05); }
+        .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        /* 底部操作按钮 */
+        .voice-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+
+        /* 结果区域 */
+        .result-section { display: none; }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .result-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .overall-badge {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.06);
+            padding: 8px 16px;
+            border-radius: 10px;
+        }
+        .score-number { font-size: 28px; font-weight: 700; color: #4db8e8; }
+        .score-label { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+        /* 程序类型标签 */
+        .program-type-tag {
+            display: inline-block;
+            background: rgba(0,82,180,0.2);
+            color: #4db8e8;
+            padding: 4px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        /* 五要素解码卡 */
+        .decode-cards { margin-bottom: 28px; }
+        .decode-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        .decode-card:hover {
+            border-color: rgba(77,184,232,0.3);
+            background: rgba(255,255,255,0.05);
+        }
+        .decode-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .dc-left { display: flex; align-items: center; gap: 10px; }
+        .dc-symbol { font-size: 24px; }
+        .dc-name { font-size: 16px; font-weight: 600; color: #fff; }
+        .dc-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-left: 4px; }
+        .dc-score-area { display: flex; align-items: center; gap: 6px; }
+        .dc-stars .star { font-size: 14px; }
+        .star.filled { color: #f39c12; }
+        .star.empty { color: rgba(255,255,255,0.15); }
+
+        .dc-content {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.75);
+            margin-bottom: 14px;
+        }
+        .dc-content ul { margin-left: 18px; }
+        .dc-content li { margin-bottom: 6px; }
+        .dc-content strong { color: #4db8e8; font-weight: 600; }
+
+        .dc-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 6px;
+        }
+        .dc-status.good { background: rgba(39,174,96,0.12); color: #2ecc71; }
+        .dc-status.warning { background: rgba(230,126,34,0.12); color: #e67e22; }
+        .dc-status.bad { background: rgba(231,76,60,0.12); color: #e74c3c; }
+
+        /* 学习诊断 */
+        .learning-diagnosis {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+        .diagnosis-title {
+            font-size: 17px; font-weight: 600; color: #fff;
+            margin-bottom: 18px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .diagnosis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .diag-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .diag-item h4 { font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .diag-item.grasp h4 { color: #2ecc71; }
+        .diag-item.miss h4 { color: #e74c3c; }
+        .diag-item.action h4 { color: #4db8e8; }
+        .diag-item ul { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; }
+        .diag-item li { margin-bottom: 5px; }
+
+        /* 程序质量评估 */
+        .program-quality {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin-bottom: 24px;
+        }
+        .program-quality .pq-title {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .program-quality .pq-content {
+            font-size: 13px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.55);
+        }
+
+        /* 对话总结卡（语音模式专用结果） */
+        .voice-summary {
+            background: rgba(0,184,148,0.06);
+            border: 1px solid rgba(0,184,148,0.15);
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 28px;
+        }
+        .voice-summary .vs-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #00cec9;
+            margin-bottom: 16px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .vs-element {
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .vs-element:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .vs-element-header {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 8px;
+        }
+        .vs-element-header .symbol { font-size: 18px; }
+        .vs-element-header .name { font-size: 14px; font-weight: 600; color: #fff; }
+        .vs-my-answer {
+            background: rgba(0,184,148,0.08);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 8px;
+        }
+        .vs-my-answer .label { color: #00cec9; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+        .vs-ai-feedback {
+            background: rgba(77,184,232,0.06);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.65);
+        }
+        .vs-ai-feedback .label { color: #4db8e8; font-weight: 600; font-size: 12px; margin-bottom: 4px; }
+
+        /* 数据收集 */
+        .data-collect {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .data-title { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 16px; }
+        .data-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 12px; color: rgba(255,255,255,0.4); }
+        .form-group input, .form-group select {
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #e0e6f0;
+            font-size: 13px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4db8e8;
+        }
+        .rating-stars { display: flex; gap: 6px; }
+        .star-btn {
+            font-size: 22px; cursor: pointer;
+            color: rgba(255,255,255,0.15);
+            transition: color 0.2s;
+        }
+        .star-btn.active { color: #f39c12; }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 24px 0 0;
+            color: rgba(255,255,255,0.25);
+            font-size: 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 20px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .container { padding: 12px 12px 32px; }
+            .brand-bar { padding: 10px 0; margin-bottom: 4px; }
+            .brand-icon { width: 32px; height: 32px; font-size: 16px; }
+            .brand-text { font-size: 12px; }
+            .beta-tag { font-size: 11px; padding: 3px 10px; }
+            .hero { padding: 20px 0 16px; }
+            .hero h1 { font-size: 24px; letter-spacing: 1px; }
+            .hero .subtitle { font-size: 13px; }
+            .hero-tag { font-size: 12px; padding: 3px 12px; }
+            .security-notice { padding: 10px 14px; font-size: 12px; gap: 8px; }
+            .framework-card { padding: 18px 14px; border-radius: 12px; }
+            .framework-title { font-size: 14px; margin-bottom: 14px; }
+            .elements-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .element-item { padding: 12px 6px; border-radius: 10px; }
+            .element-item .symbol { font-size: 22px; }
+            .element-item .el-name { font-size: 12px; }
+            .element-item .el-question { font-size: 10px; }
+            .element-item .el-focus { font-size: 10px; }
+            .section-label { font-size: 14px; }
+            textarea { padding: 14px; border-radius: 10px; }
+            .btn { padding: 14px 20px; font-size: 15px; border-radius: 10px; }
+            .diagnosis-grid { grid-template-columns: 1fr; }
+            .data-form { grid-template-columns: 1fr; }
+            .vp-connector { width: 16px; }
+            .vp-step { width: 34px; height: 34px; font-size: 12px; }
+            .vp-step-label { top: 40px; font-size: 9px; }
+            .chat-bubble { max-width: 88%; font-size: 14px; padding: 12px 14px; }
+            .chat-avatar { width: 32px; height: 32px; font-size: 16px; border-radius: 8px; }
+            .voice-chat { max-height: 50vh; }
+            .voice-input-bar { padding: 8px 10px; gap: 8px; }
+            .decode-card { padding: 16px; border-radius: 12px; }
+            .dc-symbol { font-size: 20px; }
+            .dc-name { font-size: 15px; }
+            .dc-content { font-size: 13px; }
+            .learning-diagnosis { padding: 18px; }
+            .diagnosis-title { font-size: 15px; }
+            .diag-item { padding: 12px; }
+            .diag-item h4 { font-size: 13px; }
+            .diag-item ul { font-size: 12px; }
+            .voice-summary { padding: 16px; }
+            .data-collect { padding: 18px; }
+            .result-header { padding: 14px 0; }
+            .result-title { font-size: 18px; }
+            .overall-badge { padding: 6px 12px; }
+            .score-number { font-size: 24px; }
+            .program-type-tag { font-size: 12px; padding: 3px 12px; }
+            .program-quality { padding: 14px 16px; }
+        }
+        @media (max-width: 480px) {
+            .container { padding: 8px 10px 24px; }
+            .hero h1 { font-size: 22px; }
+            .elements-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+            .element-item .el-focus { display: none; }
+            .button-section { flex-direction: column; align-items: stretch; }
+            .btn { padding: 14px 16px; font-size: 15px; }
+            .btn-sm { padding: 10px 16px; }
+            .vp-step { width: 30px; height: 30px; font-size: 11px; }
+            .vp-connector { width: 10px; }
+            .chat-bubble { max-width: 90%; padding: 10px 12px; font-size: 13px; }
+            .voice-input-bar textarea { min-height: 44px; font-size: 16px; padding: 10px 12px; }
+            .send-btn { width: 44px; height: 44px; font-size: 18px; }
+            .voice-actions { flex-direction: column; gap: 8px; }
+            .voice-actions .btn { width: 100%; }
+            .decode-card-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .dc-score-area { align-self: flex-end; }
+            .form-group input, .form-group select { font-size: 16px; padding: 10px 12px; }
+        }
+        @media (max-width: 360px) {
+            .hero h1 { font-size: 20px; }
+            .elements-grid { gap: 4px; }
+            .element-item { padding: 10px 4px; }
+            .element-item .el-question { display: none; }
+        }
+
+        /* iPhone X+ safe area */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .voice-input-bar {
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+    <div class="container">
+        <!-- 品牌栏 -->
+        <div class="brand-bar">
+            <div class="brand-left">
+                <div class="brand-icon">核</div>
+                <div class="brand-text">中广核工程培训中心</div>
+            </div>
+            <div class="beta-tag">Beta v3.0</div>
+        </div>
+
+        <!-- 主标题 -->
+        <div class="hero">
+            <div class="hero-tag">🔍 程序解码工具</div>
+            <h1>五要素解码框架</h1>
+            <div class="subtitle">从"死文书"到"活系统" — 让程序自己说话</div>
+        </div>
+
+        <!-- 保密提示 -->
+        <div class="security-notice">
+            <span class="icon">🔒</span>
+            <span><strong>保密提示：</strong>本工具仅供教学练习使用。禁止上传涉密信息、内部敏感数据，请注意信息脱敏处理。</span>
+        </div>
+
+        <!-- ========== 输入页 ========== -->
+        <div id="inputPage">
+            <!-- 五要素框架 -->
+            <div class="framework-card">
+                <div class="framework-title">💡 解码框架 — 从五个维度读懂一个程序</div>
+                <div class="elements-grid">
+                    <div class="element-item">
+                        <div class="symbol">🎯</div>
+                        <div class="el-name">体 = 目的</div>
+                        <div class="el-question">Why｜为了啥？</div>
+                        <div class="el-focus">SOP重 · 接口重</div>
+                    </div>
+                    <div class="element-item">
+                        <div class="symbol">🏗️</div>
+                        <div class="el-name">面 = 结构</div>
+                        <div class="el-question">What｜分几块？</div>
+                        <div class="el-focus">Checklist重</div>
+                    </div>
+                    <div class="element-item">
+                        <div class="symbol">🔗</div>
+                        <div class="el-name">线 = 关系</div>
+                        <div class="el-question">Logic｜谁制约谁？</div>
+                        <div class="el-focus">接口重 · SOP轻</div>
+                    </div>
+                    <div class="element-item">
+                        <div class="symbol">📝</div>
+                        <div class="el-name">点 = 细节</div>
+                        <div class="el-question">How｜操作与步骤？</div>
+                        <div class="el-focus">SOP重</div>
+                    </div>
+                    <div class="element-item">
+                        <div class="symbol">⚠️</div>
+                        <div class="el-name">要点 = Tips</div>
+                        <div class="el-question">成败关键与红线</div>
+                        <div class="el-focus">全部重</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 程序文本输入 -->
+            <div class="input-section">
+                <div class="input-header">
+                    <div class="section-label">📄 粘贴程序原文</div>
+                    <div class="char-count" id="charCount">0 / 5000 字</div>
+                </div>
+                <textarea
+                    id="programText"
+                    placeholder="请将程序文本粘贴于此（可从钉钉、Word等复制）&#10;&#10;建议包含：标题、正文内容等完整程序信息&#10;&#10;字数上限：5000字"
+                    oninput="updateCharCount()"></textarea>
+            </div>
+
+            <!-- 按钮 -->
+            <div class="button-section">
+                <button class="btn btn-secondary" onclick="clearInput()">清空重填</button>
+                <button class="btn btn-primary" id="decodeBtn" onclick="startDirectDecode()">直接解码</button>
+                <button class="btn btn-voice" id="voiceBtn" onclick="startVoiceDecode()">🎙️ 语音对话解码</button>
+            </div>
+
+            <div style="text-align:center;margin-top:12px;">
+                <span style="font-size:12px;color:rgba(255,255,255,0.35);">💡 「直接解码」= AI 直接给结果 ｜「语音对话解码」= AI 引导你逐步思考，更像课堂互动</span>
+            </div>
+        </div>
+
+        <!-- ========== 加载页 ========== -->
+        <div class="loading-overlay" id="loadingPage">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">正在深度分析程序内容...</div>
+            <div class="loading-sub" id="loadingSub">AI 正在识别五要素，请稍候（约10-30秒）</div>
+        </div>
+
+        <!-- ========== 语音对话页 ========== -->
+        <div class="voice-page" id="voicePage">
+            <!-- 顶部进度 -->
+            <div class="voice-progress" id="voiceProgress"></div>
+
+            <!-- 对话区域 -->
+            <div class="voice-chat" id="voiceChat"></div>
+
+            <!-- 输入栏 -->
+            <div class="voice-input-bar" id="voiceInputBar" style="display:none;">
+                <textarea id="voiceInput" placeholder="输入你的回答（支持手机语音输入法）..." rows="1" onkeydown="handleVoiceKeydown(event)"></textarea>
+                <button class="send-btn" id="voiceSendBtn" onclick="submitVoiceAnswer()" disabled>➤</button>
+            </div>
+
+            <!-- 底部操作 -->
+            <div class="voice-actions" id="voiceActions" style="display:none;">
+                <button class="btn btn-outline btn-sm" onclick="skipElement()">跳过这个要素</button>
+                <button class="btn btn-primary btn-sm" id="nextElementBtn" onclick="nextElement()" style="display:none;">下一个要素 ➤</button>
+                <button class="btn btn-secondary btn-sm" onclick="exitVoiceMode()">退出对话模式</button>
+            </div>
+        </div>
+
+        <!-- ========== 结果页 ========== -->
+        <div class="result-section" id="resultPage">
+            <div class="result-header">
+                <div class="result-title" id="resultTitle">📊 程序解码报告</div>
+                <div class="overall-badge">
+                    <div class="score-label">完整度</div>
+                    <div class="score-number" id="overallScore">--</div>
+                </div>
+            </div>
+
+            <div id="programTypeTag" class="program-type-tag"></div>
+
+            <!-- 语音对话总结（仅语音模式） -->
+            <div class="voice-summary" id="voiceSummary" style="display:none;">
+                <div class="vs-title">🗣️ 对话解码总结</div>
+                <div id="voiceSummaryContent"></div>
+            </div>
+
+            <!-- AI 解码卡 -->
+            <div id="aiView">
+                <div class="decode-cards" id="decodeCards"></div>
+            </div>
+
+            <!-- 学习诊断 -->
+            <div class="learning-diagnosis" id="learningDiagnosisSection">
+                <div class="diagnosis-title">🎯 学习诊断</div>
+                <div class="diagnosis-grid">
+                    <div class="diag-item grasp">
+                        <h4>✅ 你已经掌握的</h4>
+                        <ul id="graspList"></ul>
+                    </div>
+                    <div class="diag-item miss">
+                        <h4>🔍 容易遗漏的</h4>
+                        <ul id="missList"></ul>
+                    </div>
+                    <div class="diag-item action">
+                        <h4>📈 下一步提升方向</h4>
+                        <ul id="actionList"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 程序质量评估 -->
+            <div class="program-quality">
+                <div class="pq-title">📋 程序本身的质量评估</div>
+                <div class="pq-content" id="programQuality"></div>
+            </div>
+
+            <!-- 数据收集 -->
+            <div class="data-collect" id="dataCollect">
+                <div class="data-title">📝 使用反馈</div>
+                <div class="data-form">
+                    <div class="form-group">
+                        <label>工号/部门（选填）</label>
+                        <input type="text" id="userId" placeholder="例如：A001">
+                    </div>
+                    <div class="form-group">
+                        <label>解码用时</label>
+                        <select id="timeSpent">
+                            <option value="">请选择</option>
+                            <option value="1">5分钟以内</option>
+                            <option value="2">5-10分钟</option>
+                            <option value="3">10-15分钟</option>
+                            <option value="4">15分钟以上</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>工具对您有帮助吗？</label>
+                        <div class="rating-stars" id="helpRating">
+                            <span class="star-btn" onclick="setRating('help',1)">☆</span>
+                            <span class="star-btn" onclick="setRating('help',2)">☆</span>
+                            <span class="star-btn" onclick="setRating('help',3)">☆</span>
+                            <span class="star-btn" onclick="setRating('help',4)">☆</span>
+                            <span class="star-btn" onclick="setRating('help',5)">☆</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>自评解码完整度</label>
+                        <div class="rating-stars" id="selfRating">
+                            <span class="star-btn" onclick="setRating('self',1)">☆</span>
+                            <span class="star-btn" onclick="setRating('self',2)">☆</span>
+                            <span class="star-btn" onclick="setRating('self',3)">☆</span>
+                            <span class="star-btn" onclick="setRating('self',4)">☆</span>
+                            <span class="star-btn" onclick="setRating('self',5)">☆</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 按钮 -->
+            <div class="button-section">
+                <button class="btn btn-secondary" onclick="goBack()">返回修改</button>
+                <button class="btn btn-primary" onclick="submitFeedback()">提交反馈</button>
+            </div>
+        </div>
+
+        <!-- 底部 -->
+        <div class="footer">张超 出品 | 中广核工程培训中心</div>
+    </div>
+
+<script>
+    // ============ 配置 ============
+    const DOUBAO_API_KEY = '1bc46941-6ec7-4bdd-8028-69ba644d8172';
+    const DOUBAO_ENDPOINT = 'ep-20260326113654-pg96j';
+    const DOUBAO_BASE_URL = 'https://ark.cn-beijing.volces.com/api/v3/chat/completions';
+
+    // ============ 五要素定义 ============
+    const ELEMENTS = [
+        { key: 'purpose', symbol: '🎯', name: '体 = 目的', sub: 'Why｜到底为了啥？', question: '这个程序到底为了解决什么问题？', hint: '思考：谁要用这个程序？最终要达成什么效果？' },
+        { key: 'structure', symbol: '🏗️', name: '面 = 结构', sub: 'What｜整体分几块？', question: '这个程序整体分几大块？', hint: '思考：把程序看成一座楼，分几层？每层是什么功能？' },
+        { key: 'relation', symbol: '🔗', name: '线 = 关系', sub: 'Logic｜谁制约谁？', question: '各部分之间有什么逻辑关系？', hint: '思考：先做哪步再做哪步？有没有前置条件？谁制约谁？' },
+        { key: 'detail', symbol: '📝', name: '点 = 细节', sub: 'How｜操作与步骤？', question: '关键的步骤和标准是什么？', hint: '思考：具体怎么做？有哪些量化指标和操作要求？' },
+        { key: 'tips', symbol: '⚠️', name: '要点 = Tips', sub: '成败关键与红线', question: '成败关键和红线是什么？', hint: '思考：最忌讳什么？哪些地方容易出错？有什么绝对不能碰的红线？' }
+    ];
+
+    // ============ 状态 ============
+    let ratings = { help: 0, self: 0 };
+    let currentResult = null;
+    let decodeStartTime = null;
+    let decodeMode = 'direct'; // 'direct' or 'voice'
+
+    // 语音对话状态
+    let voiceState = {
+        programText: '',
+        aiFullResult: null,       // AI 完整解码结果（后台先算好）
+        currentElementIdx: -1,    // 当前要素索引（0-4）
+        elementResults: [],       // 每个要素的对话结果 [{studentAnswer, aiFeedback}]
+        isWaiting: false          // 等待学员回答
+    };
+
+    // ============ UI 工具 ============
+    function updateCharCount() {
+        const text = document.getElementById('programText').value;
+        const count = text.length;
+        const el = document.getElementById('charCount');
+        el.textContent = count + ' / 5000 字';
+        el.classList.toggle('warning', count > 5000);
+    }
+
+    function clearInput() {
+        document.getElementById('programText').value = '';
+        updateCharCount();
+    }
+
+    function showPage(page) {
+        document.getElementById('inputPage').style.display = page === 'input' ? 'block' : 'none';
+        document.getElementById('loadingPage').classList.toggle('active', page === 'loading');
+        document.getElementById('resultPage').style.display = page === 'result' ? 'block' : 'none';
+        document.getElementById('voicePage').classList.toggle('active', page === 'voice');
+    }
+
+    function setRating(type, value) {
+        ratings[type] = value;
+        const container = document.getElementById(type === 'help' ? 'helpRating' : 'selfRating');
+        container.querySelectorAll('.star-btn').forEach((btn, i) => {
+            btn.textContent = i < value ? '★' : '☆';
+            btn.classList.toggle('active', i < value);
+        });
+    }
+
+    function goBack() {
+        showPage('input');
+    }
+
+    // ============ 工具函数 ============
+    async function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function updateLoadingStatus(text) {
+        const sub = document.getElementById('loadingSub');
+        if (sub) sub.textContent = text;
+    }
+
+    // ============ 豆包 API（火山引擎） ============
+    async function callDoubao(prompt) {
+        const body = {
+            model: DOUBAO_ENDPOINT,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.3,
+            max_tokens: 4096
+        };
+        const maxRetries = 3;
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            if (attempt > 0) {
+                const waitSec = attempt * 8;
+                updateLoadingStatus(`豆包限流，等待 ${waitSec} 秒后重试...（第 ${attempt + 1}/${maxRetries} 次）`);
+                await sleep(waitSec * 1000);
+            }
+            try {
+                const response = await fetch(DOUBAO_BASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DOUBAO_API_KEY}`
+                    },
+                    body: JSON.stringify(body)
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.choices[0].message.content;
+                }
+                if (response.status === 429) continue;
+                const errText = await response.text();
+                throw new Error(`豆包 API 错误 (${response.status}): ${errText.substring(0, 200)}`);
+            } catch (e) {
+                if (e.message.startsWith('豆包')) throw e;
+                continue;
+            }
+        }
+        throw new Error('豆包 API 也暂时不可用，请稍后再试。');
+    }
+
+    // 统一调用接口
+    async function callAI(prompt) {
+        return await callDoubao(prompt);
+    }
+
+    // ============ 直接解码模式（和v2一样） ============
+    function buildDirectPrompt(text) {
+        return `你是一位资深的企业培训师和程序管理专家，擅长帮助核电工程师解读工作程序。
+
+请用五要素解码框架对以下程序进行深度解码。
+
+## 五要素解码框架
+1. **体=目的（Why）**：这个程序到底为了解决什么问题？
+2. **面=结构（What）**：整体分几大块？核心模块是什么？
+3. **线=关系（Logic）**：各部分的逻辑关系？谁制约谁？
+4. **点=细节（How）**：关键操作步骤、参数、标准？
+5. **要点=Tips**：成败关键、红线、易错点？
+
+## 三类程序的重点差异
+- **作业类(SOP)**：重"点"和"要点"，目标是"做对"
+- **核查类(Checklist)**：重"面"和"要点"，目标是"不漏项"
+- **沟通类(接口)**：重"线"和"体"，目标是"协同高效"
+
+## 请输出以下 JSON 格式：
+
+\`\`\`json
+{
+  "programName": "程序名称（10字以内）",
+  "programType": "sop 或 checklist 或 interface",
+  "typeReason": "判断为该类型的理由（一句话）",
+  "overallScore": 75,
+  "elements": {
+    "purpose": {
+      "score": 4,
+      "aiDecode": "【核心目的】...\\n【识别依据】...",
+      "inProgram": "程序文本中关于目的的信息是否充分",
+      "status": "good"
+    },
+    "structure": { "score": 3, "aiDecode": "【整体结构】...\\n【识别依据】...", "inProgram": "...", "status": "warning" },
+    "relation": { "score": 2, "aiDecode": "【逻辑关系】...\\n【识别依据】...", "inProgram": "...", "status": "bad" },
+    "detail": { "score": 4, "aiDecode": "【关键细节】...\\n【识别依据】...", "inProgram": "...", "status": "good" },
+    "tips": { "score": 3, "aiDecode": "【成败关键】...\\n【红线禁忌】...\\n【易错提醒】...", "inProgram": "...", "status": "warning" }
+  },
+  "learningDiagnosis": {
+    "grasped": ["已掌握的能力点（3-4条）"],
+    "easilyMissed": ["初学者容易遗漏的地方（3-4条）"],
+    "nextSteps": ["具体提升方向（3-4条）"]
+  },
+  "programQuality": "2-3句话评价程序写作质量"
+}
+\`\`\`
+
+## 评分规则
+- 每个要素1-5分，评价程序文本中该要素的信息充分程度
+- good: 4-5分，warning: 2-3分，bad: 0-1分
+- overallScore = 五要素平均分 × 20（0-100）
+- aiDecode 字段中的换行请用 \\n 表示
+
+## 以下是程序文本：
+
+${text}`;
+    }
+
+    async function startDirectDecode() {
+        const text = document.getElementById('programText').value.trim();
+        if (!text) { alert('请先粘贴程序内容'); return; }
+        if (text.length > 5000) { alert('程序内容超过5000字，请缩减后重试'); return; }
+
+        decodeMode = 'direct';
+        decodeStartTime = Date.now();
+        document.getElementById('decodeBtn').disabled = true;
+        document.getElementById('voiceBtn').disabled = true;
+        showPage('loading');
+
+        try {
+            const prompt = buildDirectPrompt(text);
+            const responseText = await callAI(prompt);
+            currentResult = parseAIResponse(responseText);
+            displayDirectResult(currentResult);
+        } catch (e) {
+            alert('❌ ' + e.message + '\n\n请检查网络后重试。');
+            showPage('input');
+        } finally {
+            document.getElementById('decodeBtn').disabled = false;
+            document.getElementById('voiceBtn').disabled = false;
+        }
+    }
+
+    // ============ 语音对话解码模式 ============
+    // Prompt：让AI先完整解码，但额外生成每个要素的"引导提示"
+    function buildVoicePrompt(text) {
+        return `你是一位资深的企业培训师和程序管理专家，正在课堂上一对一辅导一位学员。
+
+这位学员正在学习用"五要素解码框架"来读懂工作程序。你的任务是：
+1. 先用五要素框架完整解码这个程序
+2. 额外为每个要素设计一个**引导提示**（帮助学员自己思考，而不是直接给答案）
+3. 为每个要素准备一个**参照标准**（学员回答后用来对照评价）
+
+## 五要素解码框架
+1. **体=目的（Why）**：这个程序到底为了解决什么问题？
+2. **面=结构（What）**：整体分几大块？
+3. **线=关系（Logic）**：各部分的逻辑关系？谁制约谁？
+4. **点=细节（How）**：关键操作步骤、参数、标准？
+5. **要点=Tips**：成败关键、红线、易错点？
+
+## 请输出以下 JSON 格式：
+
+\`\`\`json
+{
+  "programName": "程序名称（10字以内）",
+  "programType": "sop 或 checklist 或 interface",
+  "typeReason": "判断理由（一句话）",
+  "overallScore": 75,
+  "elements": {
+    "purpose": {
+      "score": 4,
+      "guideHint": "给学员的引导提示（2-3句话，引导他思考这个程序的目的，不要直接说答案。可以提示他关注文本中的某些关键词或段落，让他自己去发现）",
+      "reference": "参照标准（简明扼要地写出正确的解码内容，用于学员回答后对照）",
+      "status": "good"
+    },
+    "structure": { "score": 3, "guideHint": "引导提示...", "reference": "参照标准...", "status": "warning" },
+    "relation": { "score": 2, "guideHint": "引导提示...", "reference": "参照标准...", "status": "bad" },
+    "detail": { "score": 4, "guideHint": "引导提示...", "reference": "参照标准...", "status": "good" },
+    "tips": { "score": 3, "guideHint": "引导提示...", "reference": "参照标准...", "status": "warning" }
+  },
+  "learningDiagnosis": {
+    "grasped": ["解码时大概率能发现的信息（3-4条，表扬观察力）"],
+    "easilyMissed": ["初学者最容易忽略的要素或角度（3-4条，最有教学价值）"],
+    "nextSteps": ["具体可操作的提升方向（3-4条）"]
+  },
+  "programQuality": "2-3句话评价程序写作质量"
+}
+\`\`\`
+
+## 引导提示设计原则
+- 不要直接告诉答案，而是**引导学员自己去文本中找**
+- 可以提示学员关注某些关键词、章节标题、特定段落
+- 用提问的方式激发思考，比如"你注意到第X节提到了什么吗？"
+- 语气像一位耐心的师傅在引导徒弟，鼓励他
+
+## 参照标准设计原则
+- 简明扼要，控制在3-5句话
+- 直接给出该要素的正确解码结果
+- 用于学员回答后做对照评价
+
+## 以下是程序文本：
+
+${text}`;
+    }
+
+    // 生成对学员回答进行点评的 Prompt
+    function buildFeedbackPrompt(elementKey, studentAnswer, reference) {
+        const elInfo = ELEMENTS.find(e => e.key === elementKey);
+        return `你是一位耐心的企业培训师，正在辅导学员用五要素框架解码工作程序。
+
+学员刚刚回答了「${elInfo.name}」这个要素的解码。
+
+**学员的回答：**
+${studentAnswer || '（学员表示跳过/不清楚）'}
+
+**师傅的参照标准：**
+${reference}
+
+请你以师傅的口吻给出点评，要求：
+1. **先肯定**：学员回答中说得对的部分（如果有），鼓励学习信心
+2. **再补充**：学员遗漏或理解偏差的地方，温和地指出来
+3. **给方向**：告诉他接下来应该关注什么
+4. 语气要自然口语化，像在课堂上面对面交流，不要像机器评分
+5. 控制在3-5句话，不要太长
+
+请直接输出点评文字，不要加任何格式标记。`;
+    }
+
+    async function startVoiceDecode() {
+        const text = document.getElementById('programText').value.trim();
+        if (!text) { alert('请先粘贴程序内容'); return; }
+        if (text.length > 5000) { alert('程序内容超过5000字，请缩减后重试'); return; }
+
+        decodeMode = 'voice';
+        decodeStartTime = Date.now();
+
+        // 初始化语音对话状态
+        voiceState = {
+            programText: text,
+            aiFullResult: null,
+            currentElementIdx: -1,
+            elementResults: ELEMENTS.map(() => ({ studentAnswer: '', aiFeedback: '' })),
+            isWaiting: false
+        };
+
+        document.getElementById('decodeBtn').disabled = true;
+        document.getElementById('voiceBtn').disabled = true;
+        showPage('loading');
+        updateLoadingStatus('AI 师傅正在备课，分析程序内容...');
+
+        try {
+            // 第一步：后台让 AI 完整解码（生成引导提示 + 参照标准）
+            const prompt = buildVoicePrompt(text);
+            const responseText = await callAI(prompt);
+            voiceState.aiFullResult = parseAIResponse(responseText);
+
+            // 进入对话界面
+            enterVoiceMode();
+        } catch (e) {
+            alert('❌ ' + e.message + '\n\n请检查网络后重试。');
+            showPage('input');
+            document.getElementById('decodeBtn').disabled = false;
+            document.getElementById('voiceBtn').disabled = false;
+        }
+    }
+
+    function enterVoiceMode() {
+        showPage('voice');
+        renderProgress();
+        document.getElementById('voiceChat').innerHTML = '';
+
+        // 开场白
+        addChatMsg('ai', `好的，我已经读完了这个程序。现在我们一起来用五要素框架把它拆解开来。
+
+我会一个一个要素地引导你思考，在下方输入框回答即可（手机可以用语音输入法 🎤）。
+
+不用紧张，想到什么说什么就好。
+
+准备好了吗？我们从第一个要素开始 👇`);
+
+        // 延迟后开始第一个要素
+        setTimeout(() => {
+            startNextElement();
+        }, 1500);
+    }
+
+    function renderProgress() {
+        const container = document.getElementById('voiceProgress');
+        let html = '';
+        ELEMENTS.forEach((el, i) => {
+            let cls = 'upcoming';
+            if (i < voiceState.currentElementIdx) cls = 'done';
+            else if (i === voiceState.currentElementIdx) cls = 'current';
+
+            html += `<div class="vp-step ${cls}">${el.symbol}<span class="vp-step-label">${el.name.split('=')[0].trim()}</span></div>`;
+            if (i < ELEMENTS.length - 1) {
+                const connCls = i < voiceState.currentElementIdx ? 'done' : '';
+                html += `<div class="vp-connector ${connCls}"></div>`;
+            }
+        });
+        container.innerHTML = html;
+    }
+
+    function startNextElement() {
+        voiceState.currentElementIdx++;
+        if (voiceState.currentElementIdx >= ELEMENTS.length) {
+            // 全部完成
+            finishVoiceDecode();
+            return;
+        }
+
+        const idx = voiceState.currentElementIdx;
+        const el = ELEMENTS[idx];
+        const aiEl = voiceState.aiFullResult.elements[el.key];
+
+        renderProgress();
+
+        // 显示引导提示
+        addChatMsg('ai', `---
+
+**${el.symbol} 第 ${idx + 1}/5 个要素：${el.name}**
+
+${el.question}
+
+> 💡 ${aiEl.guideHint || el.hint}
+
+请在下方输入你的回答（手机可用语音输入法）。`);
+
+        // 显示输入栏和操作按钮
+        document.getElementById('voiceInputBar').style.display = 'flex';
+        document.getElementById('voiceActions').style.display = 'flex';
+        document.getElementById('nextElementBtn').style.display = 'none';
+        document.getElementById('voiceInput').value = '';
+        updateSendBtn();
+        voiceState.isWaiting = true;
+
+        // 滚动到底部
+        scrollToBottom();
+    }
+
+    function updateSendBtn() {
+        const hasText = document.getElementById('voiceInput').value.trim().length > 0;
+        document.getElementById('voiceSendBtn').disabled = !hasText;
+    }
+
+    function handleVoiceKeydown(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            submitVoiceAnswer();
+        }
+        // 实时更新发送按钮状态
+        setTimeout(updateSendBtn, 0);
+    }
+
+    async function submitVoiceAnswer() {
+        if (!voiceState.isWaiting) return;
+        const input = document.getElementById('voiceInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        voiceState.isWaiting = false;
+        const idx = voiceState.currentElementIdx;
+        const el = ELEMENTS[idx];
+
+        // 显示学员的回答
+        addChatMsg('student', text);
+        voiceState.elementResults[idx].studentAnswer = text;
+
+        // 清空输入框，禁用发送
+        input.value = '';
+        updateSendBtn();
+        document.getElementById('voiceSendBtn').disabled = true;
+
+        // 显示AI正在思考
+        addTypingIndicator();
+
+        // 调用 AI 生成点评
+        try {
+            const aiEl = voiceState.aiFullResult.elements[el.key];
+            const feedbackPrompt = buildFeedbackPrompt(el.key, text, aiEl.reference);
+            const feedback = await callAI(feedbackPrompt);
+            removeTypingIndicator();
+
+            voiceState.elementResults[idx].aiFeedback = feedback;
+
+            // 显示点评
+            addChatMsg('ai', feedback);
+
+            // 显示"下一个"按钮
+            document.getElementById('nextElementBtn').style.display = 'inline-block';
+            if (idx >= ELEMENTS.length - 1) {
+                document.getElementById('nextElementBtn').textContent = '查看解码总结 ➤';
+            }
+        } catch (e) {
+            removeTypingIndicator();
+            addChatMsg('ai', '点评生成失败了，不过没关系，我们继续下一个要素吧。');
+            document.getElementById('nextElementBtn').style.display = 'inline-block';
+        }
+
+        scrollToBottom();
+    }
+
+    function skipElement() {
+        if (!voiceState.isWaiting) return;
+        voiceState.isWaiting = false;
+
+        const idx = voiceState.currentElementIdx;
+        const el = ELEMENTS[idx];
+        voiceState.elementResults[idx].studentAnswer = '（跳过）';
+
+        addChatMsg('student', '（跳过这个要素）');
+
+        // 简短回应后直接下一个
+        addChatMsg('ai', `没关系，${el.name}确实是最容易卡壳的要素之一。我们先继续，回头可以再看。`);
+
+        setTimeout(() => startNextElement(), 1200);
+    }
+
+    function nextElement() {
+        startNextElement();
+    }
+
+    function exitVoiceMode() {
+        if (confirm('确定要退出对话模式吗？已完成的对话内容会保留。')) {
+            finishVoiceDecode();
+        }
+    }
+
+    async function finishVoiceDecode() {
+        document.getElementById('voiceInputBar').style.display = 'none';
+        document.getElementById('voiceActions').style.display = 'none';
+
+        addChatMsg('ai', `---
+
+✅ 太好了！五个要素我们都过了一遍。
+
+我正在为你整理完整的解码报告，请稍等...`);
+
+        showPage('loading');
+        updateLoadingStatus('正在生成最终解码报告...');
+
+        // 将语音模式的对话结果补充到 AI 完整结果中
+        try {
+            const aiResult = voiceState.aiFullResult;
+
+            // 基于对话结果，让 AI 生成更个性化的学习诊断
+            const dialogueSummary = ELEMENTS.map((el, i) => {
+                const r = voiceState.elementResults[i];
+                return `【${el.name}】\n学员回答：${r.studentAnswer}\n师傅点评：${r.aiFeedback || '（无）'}`;
+            }).join('\n\n');
+
+            const diagPrompt = `你是一位企业培训师。一位学员刚刚用五要素框架对一段工作程序进行了语音对话解码。以下是整个对话过程的摘要：
+
+${dialogueSummary}
+
+请基于对话中展现出的学员能力，生成个性化的学习诊断。要求：
+1. "已掌握的"：从学员回答中体现出他理解正确的部分
+2. "容易遗漏的"：对话中学员卡壳、跳过或回答不到位的地方
+3. "下一步提升方向"：针对性的提升建议
+
+请输出 JSON：
+{
+  "grasped": ["..."],
+  "easilyMissed": ["..."],
+  "nextSteps": ["..."]
+}`;
+
+            const diagText = await callAI(diagPrompt);
+            let diagData;
+            try {
+                const m = diagText.match(/\{[\s\S]*\}/);
+                diagData = m ? JSON.parse(m[0]) : null;
+            } catch(e) { diagData = null; }
+
+            if (diagData) {
+                aiResult.learningDiagnosis = diagData;
+            }
+
+            currentResult = aiResult;
+            displayVoiceResult(aiResult);
+        } catch (e) {
+            // 即使诊断生成失败，也展示已有的结果
+            currentResult = voiceState.aiFullResult;
+            displayVoiceResult(voiceState.aiFullResult);
+        } finally {
+            document.getElementById('decodeBtn').disabled = false;
+            document.getElementById('voiceBtn').disabled = false;
+        }
+    }
+
+    // ============ 解析 AI 返回 ============
+    function parseAIResponse(responseText) {
+        let jsonStr = responseText;
+        const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
+        if (jsonMatch) {
+            jsonStr = jsonMatch[1];
+        } else {
+            const braceMatch = responseText.match(/\{[\s\S]*\}/);
+            if (braceMatch) {
+                jsonStr = braceMatch[0];
+            }
+        }
+        try {
+            return JSON.parse(jsonStr);
+        } catch (e) {
+            console.error('JSON 解析失败:', e, '\n原始内容:', jsonStr);
+            throw new Error('AI 返回格式异常，请重试');
+        }
+    }
+
+    // ============ 聊天 UI 辅助 ============
+    function addChatMsg(role, content) {
+        const chat = document.getElementById('voiceChat');
+        const avatar = role === 'ai' ? '🧑‍🏫' : '🧑‍💻';
+        const bubbleContent = content
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/>\s*(.*?)(<br>|$)/g, '<div style="color:rgba(255,255,255,0.5);font-style:italic;margin:4px 0;">$1</div>')
+            .replace(/\n/g, '<br>')
+            .replace(/---/g, '<hr style="border:none;border-top:1px solid rgba(255,255,255,0.06);margin:12px 0;">');
+
+        chat.innerHTML += `
+            <div class="chat-msg ${role}">
+                <div class="chat-avatar">${avatar}</div>
+                <div class="chat-bubble">${bubbleContent}</div>
+            </div>
+        `;
+        scrollToBottom();
+    }
+
+    function addTypingIndicator() {
+        const chat = document.getElementById('voiceChat');
+        chat.innerHTML += `
+            <div class="chat-msg ai" id="typingMsg">
+                <div class="chat-avatar">🧑‍🏫</div>
+                <div class="chat-bubble">
+                    <div class="typing-indicator"><span></span><span></span><span></span></div>
+                </div>
+            </div>
+        `;
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const el = document.getElementById('typingMsg');
+        if (el) el.remove();
+    }
+
+    function scrollToBottom() {
+        setTimeout(() => {
+            const chat = document.getElementById('voiceChat');
+            chat.scrollTop = chat.scrollHeight;
+        }, 100);
+    }
+
+    // ============ 显示结果（直接模式） ============
+    function displayDirectResult(result) {
+        document.getElementById('resultTitle').textContent = '📊 程序解码报告';
+        document.getElementById('voiceSummary').style.display = 'none';
+        document.getElementById('learningDiagnosisSection').style.display = 'block';
+        showPage('result');
+
+        document.getElementById('overallScore').textContent = result.overallScore + '%';
+
+        const typeNames = { sop: '作业类 (SOP)', checklist: '核查类 (Checklist)', interface: '沟通类 (接口)' };
+        document.getElementById('programTypeTag').textContent =
+            `📋 ${result.programName || '未知程序'} · ${typeNames[result.programType] || '未知类型'} — ${result.typeReason || ''}`;
+
+        renderAICards(result);
+        renderLearningDiagnosis(result);
+        document.getElementById('programQuality').textContent = result.programQuality || '';
+
+        window.scrollTo(0, 0);
+    }
+
+    // ============ 显示结果（语音模式） ============
+    function displayVoiceResult(result) {
+        document.getElementById('resultTitle').textContent = '🗣️ 对话解码报告';
+        showPage('result');
+
+        document.getElementById('overallScore').textContent = result.overallScore + '%';
+
+        const typeNames = { sop: '作业类 (SOP)', checklist: '核查类 (Checklist)', interface: '沟通类 (接口)' };
+        document.getElementById('programTypeTag').textContent =
+            `📋 ${result.programName || '未知程序'} · ${typeNames[result.programType] || '未知类型'} — ${result.typeReason || ''}`;
+
+        // 渲染对话总结
+        renderVoiceSummary();
+        renderAICards(result);
+        renderLearningDiagnosis(result);
+        document.getElementById('programQuality').textContent = result.programQuality || '';
+
+        window.scrollTo(0, 0);
+    }
+
+    function renderVoiceSummary() {
+        const container = document.getElementById('voiceSummaryContent');
+        container.innerHTML = '';
+
+        ELEMENTS.forEach((el, i) => {
+            const r = voiceState.elementResults[i];
+            if (!r.studentAnswer || r.studentAnswer === '（跳过）') {
+                container.innerHTML += `
+                    <div class="vs-element">
+                        <div class="vs-element-header">
+                            <span class="symbol">${el.symbol}</span>
+                            <span class="name">${el.name}</span>
+                            <span style="font-size:12px;color:rgba(255,255,255,0.35);">（跳过）</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML += `
+                    <div class="vs-element">
+                        <div class="vs-element-header">
+                            <span class="symbol">${el.symbol}</span>
+                            <span class="name">${el.name}</span>
+                        </div>
+                        <div class="vs-my-answer">
+                            <div class="label">🧑‍💻 我的回答</div>
+                            ${r.studentAnswer}
+                        </div>
+                        ${r.aiFeedback ? `
+                        <div class="vs-ai-feedback">
+                            <div class="label">🧑‍🏫 师傅点评</div>
+                            ${r.aiFeedback}
+                        </div>` : ''}
+                    </div>
+                `;
+            }
+        });
+
+        document.getElementById('voiceSummary').style.display = 'block';
+    }
+
+    function renderAICards(result) {
+        const cardsEl = document.getElementById('decodeCards');
+        cardsEl.innerHTML = '';
+
+        ELEMENTS.forEach(elInfo => {
+            const el = result.elements[elInfo.key];
+            if (!el) return;
+
+            const starsHtml = Array.from({length:5}, (_,i) =>
+                `<span class="star ${i < el.score ? 'filled' : 'empty'}">★</span>`
+            ).join('');
+
+            const statusText = el.status === 'good' ? '✅ 信息充分' :
+                               el.status === 'warning' ? '⚠️ 有所不足' : '❌ 严重缺失';
+
+            const decodeText = el.aiDecode || el.reference || '';
+            const contentHtml = decodeText
+                .replace(/\\n/g, '\n')
+                .split('\n')
+                .map(line => {
+                    line = line.trim();
+                    if (!line) return '';
+                    if (line.startsWith('【') && line.endsWith('】')) {
+                        return `<div style="color:#4db8e8;font-weight:600;margin-top:8px;font-size:13px;">${line}</div>`;
+                    }
+                    return `<div style="margin:2px 0 2px 12px;">${line}</div>`;
+                })
+                .join('');
+
+            let inProgramHint = '';
+            if (el.inProgram && (el.status === 'warning' || el.status === 'bad')) {
+                inProgramHint = `<div style="margin-top:10px;padding:8px 12px;background:rgba(230,126,34,0.08);border-radius:8px;font-size:12px;color:rgba(255,255,255,0.5);">
+                    <span style="color:#e67e22;">📌 程序原文中</span>：${el.inProgram}
+                </div>`;
+            }
+
+            cardsEl.innerHTML += `
+                <div class="decode-card">
+                    <div class="decode-card-header">
+                        <div class="dc-left">
+                            <span class="dc-symbol">${elInfo.symbol}</span>
+                            <span class="dc-name">${elInfo.name}</span>
+                            <span class="dc-sub">${elInfo.sub}</span>
+                        </div>
+                        <div class="dc-score-area">
+                            <div class="dc-stars">${starsHtml}</div>
+                        </div>
+                    </div>
+                    <div class="dc-content">${contentHtml}</div>
+                    ${inProgramHint}
+                    <span class="dc-status ${el.status}">${statusText}</span>
+                </div>
+            `;
+        });
+    }
+
+    function renderLearningDiagnosis(result) {
+        const diag = result.learningDiagnosis || {};
+        document.getElementById('graspList').innerHTML =
+            (diag.grasped || []).map(s => `<li>${s}</li>`).join('');
+        document.getElementById('missList').innerHTML =
+            (diag.easilyMissed || []).map(s => `<li>${s}</li>`).join('');
+        document.getElementById('actionList').innerHTML =
+            (diag.nextSteps || []).map(s => `<li>${s}</li>`).join('');
+    }
+
+    // ============ 反馈 ============
+    function submitFeedback() {
+        const elapsed = decodeStartTime ? Math.round((Date.now() - decodeStartTime) / 60000) : 0;
+        const feedback = {
+            userId: document.getElementById('userId').value,
+            timeSpent: document.getElementById('timeSpent').value,
+            helpfulness: ratings.help,
+            selfRating: ratings.self,
+            actualMinutes: elapsed,
+            programType: currentResult?.programType,
+            overallScore: currentResult?.overallScore,
+            decodeMode: decodeMode,
+            voiceElementsCompleted: decodeMode === 'voice' ? voiceState.elementResults.filter(r => r.studentAnswer && r.studentAnswer !== '（跳过）').length : null,
+            timestamp: new Date().toISOString()
+        };
+        console.log('[论文数据]', feedback);
+        alert('感谢您的反馈！数据已记录。');
+        clearInput();
+        goBack();
+    }
+</script>
+</body>
+</html>
